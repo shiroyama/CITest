@@ -16,6 +16,8 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
     - echo y | android update sdk --no-ui --all --filter extra-google-google_play_services
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
+    - openssl aes-256-cbc -k $DECRYPT_KEY -d -in secret.properties.encrypted -out secret.properties
+    - openssl aes-256-cbc -k $DECRYPT_KEY -d -in keystore-release.jks.encrypted -out keystore-release.jks
   cache_directories:
     - ~/.android
   override:

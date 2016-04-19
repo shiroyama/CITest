@@ -19,6 +19,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 
+Properties secretProperties = new Properties()
+secretProperties.load(project.rootProject.file('secret.properties').newDataInputStream())
+def releaseStorePass = secretProperties.getProperty('release.storepass')
+def releaseKeyPass = secretProperties.getProperty('release.keypass')
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -30,9 +35,35 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile rootProject.file("keystore-debug.jks")
+            storePassword "o4dbZZdJ^F8}76WNvnpo"
+            keyAlias "citestdebug"
+            keyPassword "o4dbZZdJ^F8}76WNvnpo"
+        }
         release {
-            minifyEnabled false
+            storeFile rootProject.file("keystore-release.jks")
+            storePassword releaseStorePass
+            keyAlias "citestrelease"
+            keyPassword releaseKeyPass
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.debug'
+            versionNameSuffix "-debug"
+            shrinkResources true
+            debuggable true
+            zipAlignEnabled true
+        }
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources true
+            debuggable false
+            zipAlignEnabled true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

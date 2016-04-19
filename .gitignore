@@ -6,3 +6,5 @@
 .DS_Store
 /build
 /captures
+/keystore-release.jks
+/secret.properties
