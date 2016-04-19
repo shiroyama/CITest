@@ -23,8 +23,18 @@ dependencies:
 
 test:
   override:
-    - ./gradlew clean check
+    - ./gradlew check
+    - ./gradlew test
+    - ./gradlew connectedAndroidTest
 
-general:
-  artifacts:
-    - "./app/build/outputs/apk/app-release-unsigned.apk"
+deployment:
+  development:
+    branch: /^((?!master).)*$/  # not the master branch
+    commands:
+      - ./gradlew assemble
+      - ./gradlew crashlyticsUploadDistributionDebug
+  production:
+    branch: master
+    commands:
+      - ./gradlew assemble
+      - ./gradlew crashlyticsUploadDistributionRelease
